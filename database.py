@@ -10,7 +10,7 @@ def get_db_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            database='logiapp_db',
+            database='mini_tms_db',
             user='root',
             password=''
         )

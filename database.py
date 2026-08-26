@@ -88,12 +88,45 @@ def get_all_deliveries():
         if conn:
             conn.close()
 
+def save_telematics_ping(license_plate: str, latitude: float, longitude: float):
+    """
+    Tallentaa telematiikkapingin tietokantaan.
+    """
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT id FROM vehicles WHERE license_plate = %s', (license_plate,))
+        result = cursor.fetchone()
+        vehicle_id = result.get('id') if result else None
+
+        if vehicle_id:
+            cursor.execute('INSERT INTO telematics_logs (vehicle_id, latitude, longitude) VALUES (%s, %s, %s)', 
+                           (vehicle_id, latitude, longitude))
+            conn.commit()
+            return True
+    except Exception as e:
+        print(f"Tietokantavirhe: {e}")
+        if conn:
+            conn.rollback()
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+        
 
 
-if __name__ == "__main__":
-    conn = get_db_connection()
+        
 
-    if conn and conn.is_connected():
-        print(">>> Yhteys logiapp_db tietokantaan onnistui! <<<")
-        conn.close()
+
+# if __name__ == "__main__":
+#     conn = get_db_connection()
+
+#     if conn and conn.is_connected():
+#         print(">>> Yhteys logiapp_db tietokantaan onnistui! <<<")
+#         conn.close()
     

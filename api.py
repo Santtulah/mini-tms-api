@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from database import save_message, get_all_deliveries
+from database import save_message, get_all_deliveries, save_telematics_ping
 from text_parser import extract_delivery_info
 
 # Alustaa API-sovelluksen
@@ -13,6 +13,11 @@ app = FastAPI(
 # on pakko tulla JSON-objekti, jolla on avain "message" ja arvona tekstiä (str).
 class DeliveryPayload(BaseModel):
     message: str
+
+class TelematicsPing(BaseModel):
+    license_plate: str
+    latitude: float
+    longitude: float
 
 # Esimerkkireitti (GET), jolla näemme että palvelin on hengissä
 @app.get("/")
@@ -51,3 +56,18 @@ def parse_delivery_text(payload: DeliveryPayload):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Palvelinvirhe: {e}")
 
+@app.post("/api/telematics/ping")
+def telematics_ping(ping: TelematicsPing):
+    """
+    Tämä reitti vastaanottaa telematiikkapingin, joka sisältää rekisterinumeron, 
+    leveyspiirin ja pituuspiirin. Se tallentaa tiedot tietokantaan.
+    """
+    try:
+        success = save_telematics_ping(ping.license_plate, ping.latitude, ping.longitude)
+    except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Palvelinvirhe: {e}") 
+    
+    if success:
+        return {"status": "success", "message": "Telematiikkapingi tallennettu."}
+    else:
+        raise HTTPException(status_code=400, detail="Virhe tallennettaessa telematiikkapingiä. Tarkista syöte.")

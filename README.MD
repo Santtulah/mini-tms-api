@@ -42,6 +42,7 @@ FastAPI generates automatic OpenAPI/Swagger documentation for the application. W
 
 2. **Create and activate a virtual environment (recommended):**
 
+```bash
 python -m venv .venv
 
 # Windows:
@@ -51,6 +52,8 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
+```
+
 ---
 
 # Mini-TMS API (Transport Management System)

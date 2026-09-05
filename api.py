@@ -5,7 +5,7 @@ from text_parser import extract_delivery_info
 
 # Alustaa API-sovelluksen
 app = FastAPI(
-    title="LogiApp Mini-TMS API",
+    title="Mini-TMS API",
     description="Rajapinta kuljetustilausten hallintaan"
 )
 

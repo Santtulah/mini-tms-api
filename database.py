@@ -127,6 +127,6 @@ def save_telematics_ping(license_plate: str, latitude: float, longitude: float):
 #     conn = get_db_connection()
 
 #     if conn and conn.is_connected():
-#         print(">>> Yhteys logiapp_db tietokantaan onnistui! <<<")
+#         print(">>> Yhteys tietokantaan onnistui! <<<")
 #         conn.close()
     
